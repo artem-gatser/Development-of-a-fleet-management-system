@@ -1,15 +1,9 @@
 #include "vehicle.hpp"
 #include "rental_contract.hpp"
 #include <iostream>
-#include <windows.h> // Подключаем WinAPI для настройки кодировки
 
 int main()
 {
-    // Установка кодировки UTF-8 для консоли Windows, чтобы русский текст выводился без кракозябр
-    SetConsoleOutputCP(CP_UTF8);
-    SetConsoleCP(CP_UTF8);
-
-    setlocale(LC_ALL, "Russian");
 
     std::cout << "STARTING VEHICLE RENTAL SYSTEM TESTS\n\n";
 
