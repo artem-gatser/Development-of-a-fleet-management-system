@@ -3,7 +3,7 @@
 
 namespace rental
 {
-
+    // Определяем конструктор с параметрами
     MaintenanceRecord::MaintenanceRecord(std::uint64_t id, std::string_view description, double cost, std::int64_t timestamp)
         : m_id{ id }
         , m_workDescription{ description }
@@ -14,6 +14,7 @@ namespace rental
             << ", cost: " << m_cost << "\n";
     }
 
+    // Определяем деструктор
     MaintenanceRecord::~MaintenanceRecord()
     {
         std::cout << "[" << TAG << "] Destroyed maintenance record id: " << m_id << "\n";
