@@ -20,11 +20,13 @@ namespace rental
         std::int64_t m_dateTimestamp{ 0 };
 
     public:
-        // Конструктор (функция создания объекта)
+        // Конструктор по умолчанию (разрешен)
+        MaintenanceRecord() = default;
+
+        // Конструктор с параметрами (функция создания объекта)
         MaintenanceRecord(std::uint64_t id, std::string_view description, double cost, std::int64_t timestamp);
 
-        // Запрещаем создание "пустого" объекта и его копирование
-        MaintenanceRecord() = delete;
+        // Запрещаем только копирование
         MaintenanceRecord(const MaintenanceRecord&) = delete;
         MaintenanceRecord& operator=(const MaintenanceRecord&) = delete;
 

@@ -35,7 +35,7 @@ namespace rental
             return false;
         }
 
-        // Правило 1: Проверка водительского стажа (минимум 3 года)
+        // Проверка водительского стажа (минимум 3 года)
         if (m_driverExperienceYears < 3)
         {
             std::cout << "[" << TAG << "] Rental denied for contract id: " << m_contractId
@@ -44,7 +44,7 @@ namespace rental
             return false;
         }
 
-        // Правило 3: Проверка заряда батареи автомобиля
+        // Проверка заряда батареи автомобиля
         if (!m_targetVehicle->CanBeRented())
         {
             std::cout << "[" << TAG << "] Rental denied: Vehicle cannot be rented due to technical constraints.\n";

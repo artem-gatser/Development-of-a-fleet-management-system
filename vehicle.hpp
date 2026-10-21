@@ -20,18 +20,24 @@ namespace rental
         double m_batteryLevel{ 100.0 }; // Уровень заряда или топлива в процентах
         double m_mileage{ 0.0 };        // Пробег автомобиля
 
-        // Композиция: в векторе хранятся записи о ТО, принадлежащие конкретно этой машине
-        std::vector<MaintenanceRecord> m_maintenanceHistory;
+        // Динамический массив (указатель, выделяемый через new)
+        MaintenanceRecord** m_maintenanceHistory{ nullptr };
+        std::size_t m_maintenanceCapacity{ 0 };             // Вместимость массива
+        std::size_t m_maintenanceCount{ 0 };              // Текущее количество записей
 
     public:
         Vehicle(std::uint64_t id, std::string_view model, double batteryLevel, double mileage);
 
+        // Запрет на создание объектов без параметров
         Vehicle() = delete;
+
+        // Запрет копирования
         Vehicle(const Vehicle&) = delete;
         Vehicle& operator=(const Vehicle&) = delete;
 
-        Vehicle(Vehicle&&) = default;
-        Vehicle& operator=(Vehicle&&) = default;
+        // Объявление операций перемещения
+        Vehicle(Vehicle&&) noexcept;
+        Vehicle& operator=(Vehicle&&) noexcept;
 
         ~Vehicle();
 

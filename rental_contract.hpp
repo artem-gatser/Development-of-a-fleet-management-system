@@ -8,6 +8,7 @@
 namespace rental
 {
 
+    // Класс состояния договора
     enum class ContractState
     {
         eActive,

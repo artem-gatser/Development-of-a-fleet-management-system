@@ -70,6 +70,6 @@ int main()
         }
     }
 
-    std::cout << "\n=== TESTING COMPLETED, EXITING MAIN ===\n";
+    std::cout << "\nTESTING COMPLETED, EXITING MAIN\n";
     return 0;
 }
