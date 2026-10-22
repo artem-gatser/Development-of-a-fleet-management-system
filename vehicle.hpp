@@ -1,10 +1,9 @@
 #pragma once
-
 #include "maintenance_record.hpp"
 #include <cstdint>
 #include <string>
 #include <string_view>
-#include <vector>
+#include <memory>
 
 namespace rental
 {
@@ -20,9 +19,8 @@ namespace rental
         double m_batteryLevel{ 100.0 }; // Уровень заряда или топлива в процентах
         double m_mileage{ 0.0 };        // Пробег автомобиля
 
-        // Динамический массив (указатель, выделяемый через new)
-        MaintenanceRecord** m_maintenanceHistory{ nullptr };
-        std::size_t m_maintenanceCapacity{ 0 };             // Вместимость массива
+        // Замена массива MaintenanceRecord** на массив умных указателей (композиция)
+        std::unique_ptr<MaintenanceRecord> m_maintenanceHistory[10];
         std::size_t m_maintenanceCount{ 0 };              // Текущее количество записей
 
     public:
@@ -35,11 +33,12 @@ namespace rental
         Vehicle(const Vehicle&) = delete;
         Vehicle& operator=(const Vehicle&) = delete;
 
-        // Объявление операций перемещения
-        Vehicle(Vehicle&&) noexcept;
-        Vehicle& operator=(Vehicle&&) noexcept;
+        // Операции перемещения генерируются компилятором автоматически (благодаря unique_ptr)
+        Vehicle(Vehicle&&) noexcept = default;
+        Vehicle& operator=(Vehicle&&) noexcept = default;
 
-        ~Vehicle();
+        // Деструктор больше не нужен, unique_ptr очистят память автоматически
+        ~Vehicle() = default;
 
         [[nodiscard]] std::uint64_t GetId() const
         {
