@@ -4,34 +4,36 @@
 namespace rental
 {
 
-    // Конструктор договора аренды
+    // Конструктор договора аренды (принимает shared_ptr, сохраняет как weak_ptr)
     RentalContract::RentalContract(std::uint64_t id, std::string_view clientName, std::uint32_t driverExperience,
-        Vehicle* vehicle, std::uint32_t days, double dailyRate)
+        std::shared_ptr<Vehicle> vehicle, std::uint32_t days, double dailyRate)
         : m_contractId{ id }
         , m_clientName{ clientName }
         , m_driverExperienceYears{ driverExperience }
         , m_rentalDays{ days }
         , m_dailyRate{ dailyRate }
         , m_totalCost{ days * dailyRate }
-        , m_targetVehicle{ vehicle }
+        , m_targetVehicle{ vehicle } // неявное преобразование shared_ptr в weak_ptr (агрегация)
     {
         std::cout << "[" << TAG << "] Created contract id: " << m_contractId
             << " for client: " << m_clientName << "\n";
     }
 
-    // Деструктор договора (срабатывает агрегация)
+    // Деструктор договора
     RentalContract::~RentalContract()
     {
         std::cout << "[" << TAG << "] Destroyed contract id: " << m_contractId
             << ". The car itself remains safe and sound (aggregation).\n";
     }
 
-    // Оформление договора с проверками правил
+    // Оформление договора с проверками правил через .lock() для weak_ptr
     bool RentalContract::ProcessIssue()
     {
-        if (!m_targetVehicle)
+        // Превращаем weak_ptr в temporary shared_ptr для проверки, жив ли объект
+        auto lockedVehicle = m_targetVehicle.lock();
+        if (!lockedVehicle)
         {
-            std::cout << "[" << TAG << "] Error: No vehicle attached to contract id: " << m_contractId << "\n";
+            std::cout << "[" << TAG << "] Error: Vehicle no longer exists for contract id: " << m_contractId << "\n";
             return false;
         }
 
@@ -44,8 +46,8 @@ namespace rental
             return false;
         }
 
-        // Проверка заряда батареи автомобиля
-        if (!m_targetVehicle->CanBeRented())
+        // Проверка заряда батареи автомобиля через заблокированный указатель
+        if (!lockedVehicle->CanBeRented())
         {
             std::cout << "[" << TAG << "] Rental denied: Vehicle cannot be rented due to technical constraints.\n";
             return false;
